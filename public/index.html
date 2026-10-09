@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marketing Spend Workflow — Q4 2026</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header>
+  <div>
+    <h1>Marketing Spend Workflow</h1>
+    <span class="sub">Q4 2026 (Oct 1 – Dec 31) · demo data only</span>
+  </div>
+  <div class="clock-box">
+    <div class="clock-line">Demo clock: <strong id="clock-now">–</strong></div>
+    <div class="clock-btns">
+      <button data-addms="21600000">+6h</button>
+      <button data-addms="86400000">+24h</button>
+      <button data-addms="604800000">+1 week</button>
+      <button id="clock-reset">Reset clock</button>
+      <button id="reseed" class="danger">Reseed data</button>
+    </div>
+  </div>
+</header>
+
+<nav id="tabs">
+  <button class="tab active" data-tab="submit">Submit request</button>
+  <button class="tab" data-tab="queue">Approval queue <span id="queue-badge" class="badge"></span></button>
+  <button class="tab" data-tab="slack">Slack intake <span id="slack-badge" class="badge"></span></button>
+  <button class="tab" data-tab="ledger">Ledger</button>
+  <button class="tab" data-tab="digest">Weekly digest</button>
+</nav>
+
+<main>
+  <section id="tab-submit" class="panel active">
+    <div class="cols">
+      <form id="req-form" class="card form">
+        <h2>New spend request</h2>
+        <label>Requester <input name="requester" required placeholder="e.g. Dana Reyes"></label>
+        <label>Bucket <select name="bucketId" required id="bucket-select"></select></label>
+        <label>Vendor <input name="vendor" required placeholder="e.g. Meridian Media"></label>
+        <label>Amount (USD) <input name="amount" type="number" min="1" step="any" required placeholder="25000"></label>
+        <label>Description <input name="description" placeholder="What is this spend?"></label>
+        <label>Goal <input name="goal" required placeholder="Why are we spending this?"></label>
+        <div class="row">
+          <label>Success metric <input name="successMetric" required placeholder="e.g. SQLs"></label>
+          <label class="narrow">Target <input name="successTarget" type="number" min="1" step="any" required placeholder="160"></label>
+        </div>
+        <div class="row">
+          <label>Contract length
+            <select name="contractLength" id="contract-select" required></select>
+          </label>
+          <label class="check"><input name="cancellable" type="checkbox"> Can be cancelled</label>
+        </div>
+        <label>Expected spend date <input name="spendDate" type="date"> <span class="hint">(optional — defaults to decision date)</span></label>
+        <button type="submit" class="primary">Submit request</button>
+        <div id="form-result"></div>
+      </form>
+      <div class="card" id="rules-card">
+        <h2>How requests route</h2>
+        <div id="rules-body"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-queue" class="panel"><div id="queue-list"></div></section>
+  <section id="tab-slack" class="panel">
+    <div class="cols slack-cols">
+      <div class="card slack-feed-card">
+        <div class="slack-head"><strong>#mktg-spend-requests</strong><span class="sub">mock channel — no real Slack connection</span></div>
+        <div id="slack-feed"></div>
+      </div>
+      <div class="card">
+        <h2>What this is mocking</h2>
+        <p class="sub">In production this panel would be a real Slack channel: someone posts a spend request in plain English, and an ops bot files it through the <em>same</em> pipeline as the web form.</p>
+        <ul class="mini">
+          <li><strong>Show the exact change</strong> — the bot parses the message and posts back exactly what it would file (vendor, amount, bucket, routing).</li>
+          <li><strong>Wait for confirmation</strong> — nothing is submitted until a human confirms in the app.</li>
+          <li><strong>File it</strong> — same validation, same tier rules, same splitting check.</li>
+          <li><strong>Read it back</strong> — the ledger write is verified, and the receipt is reported in-channel.</li>
+          <li><strong>Flag, don't guess</strong> — missing fields go to a human instead of being invented.</li>
+        </ul>
+        <p class="sub">Requests filed this way carry a "via Slack" badge in the queue and ledger.</p>
+      </div>
+    </div>
+  </section>
+  <section id="tab-ledger" class="panel"><div id="ledger-wrap"></div></section>
+  <section id="tab-digest" class="panel"><div id="digest-wrap"></div></section>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>

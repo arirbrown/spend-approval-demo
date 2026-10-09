@@ -1,0 +1,12 @@
+{
+  "name": "spend-approval-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Marketing spend approval and tracking workflow prototype (demo data only)",
+  "scripts": {
+    "start": "node src/server.js",
+    "seed": "node src/seed.js",
+    "test": "node --test"
+  }
+}
